@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ID_version = 1010;
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(QApplication::applicationDirPath() + "/trade.sqlite");
     if(!db.open())
@@ -31,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_remnants, SIGNAL(triggered()), this, SLOT(SelectRemnants()));
     connect(ui->action_purchase, SIGNAL(triggered()), this, SLOT(SelectPurchase()));
     connect(ui->action_sale, SIGNAL(triggered()), this, SLOT(SelectSale()));
+    connect(ui->action_About, SIGNAL(triggered()), this, SLOT(SelectAbout()));
+    connect(ui->action_CheckUpdate, SIGNAL(triggered()), this, SLOT(SelectUpdate()));
 }
 
 MainWindow::~MainWindow()
@@ -62,6 +65,21 @@ void MainWindow::SelectPurchase()
 void MainWindow::SelectSale()
 {
     SelectTable(QString("sale"));
+}
+
+void MainWindow::SelectAbout()
+{
+    aboutWindow = new AboutWindow();
+    std::string ver = APP_VERSION;
+    aboutWindow->setVersion(QString::fromStdString(ver));
+    aboutWindow->show();
+}
+
+void MainWindow::SelectUpdate()
+{
+    std::string path = (QCoreApplication::applicationDirPath() + "/Update.exe").toStdString();
+    std::string version = (QString::number(ID_version)).toStdString();
+    ShellExecuteA(NULL, "runas", path.c_str(), version.c_str(), NULL, SW_SHOW);
 }
 
 void MainWindow::SelectTable(QString nameTable)
