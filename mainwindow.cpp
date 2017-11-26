@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:\\Qt\\Qt5.7.1\\Projects\\Trade\\trade.sqlite");
+    db.setDatabaseName(QApplication::applicationDirPath() + "/trade.sqlite");
     if(!db.open())
         QMessageBox::critical(this, tr("ERROR!"), db.lastError().databaseText());
     else
@@ -188,7 +188,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             queryModel->setQuery(str_query);
             if(mapTable[table->tableName()] == SALE)
             {
-                if(QDate::fromString(date, "dd.MM.yyyy") >= QDate::currentDate())
+                if(QDate::fromString(date, "yyyy-MM-dd") >= QDate::currentDate())
                 {
                     if(queryModel->rowCount() > 0)
                     {
@@ -220,7 +220,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
             else if(mapTable[table->tableName()] == PURCHASE)
             {
-                if(QDate::fromString(date, "dd.MM.yyyy") <= QDate::currentDate())
+                if(QDate::fromString(date, "yyyy-MM-dd") <= QDate::currentDate())
                 {
                     if(!table->submitAll())
                     {
